@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
     printf("Server address: %s\n", host_address);
     printf("Server port: %s\n", port);
     printf("Display motd: %s\n", motd);
+    printf("\n");
+
     advertise_server(host_address, advert);
 
     free(advert);
@@ -69,7 +71,7 @@ void advertise_server(char * host_address, char *advert) {
     memset(&tunName.name, 0, sizeof(tunName.name));
     int fd = tunOpen(NULL, &tunName);
     if (fd < 0 || strlen(tunName.name) == 0) {
-        perror("Creating a tun device failed");
+        perror("Failed to create tun device");
         exit(1);
     }
 
@@ -77,21 +79,22 @@ void advertise_server(char * host_address, char *advert) {
     
     res = add_address_to_interface(tunName.name, host_address);
     if (res != 0) {
-        perror("Adding address to interface failed");
+        perror("Failed to add address to network interface");
         exit(1);
     }
 
     res = delete_route(host_address, tunName.name);
     if (res != 0) {
-        perror("Deleting route failed");
+        perror("Failed to delete ip table route");
         exit(1);
     }
 
     printf("Starting multicast on UDP\n");
+    printf("\n");
 
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) {
-        perror("Creating udp socket failed");
+        perror("Failed to create UDP socket");
         exit(1);
     }
 
