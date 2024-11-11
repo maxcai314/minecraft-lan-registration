@@ -1,7 +1,7 @@
 CC := gcc
 
-CFLAGS := -g -Wall -Werror
-LDFLAGS :=
+CFLAGS := -O3 -g -Wall -Werror
+LDFLAGS := -O3
 INCLUDE := 
 
 BUILD_DIR := build
