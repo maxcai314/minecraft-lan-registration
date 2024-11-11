@@ -1,3 +1,7 @@
+# build outputs
+build/
+registerLanServer
+
 # Prerequisites
 *.d
 
