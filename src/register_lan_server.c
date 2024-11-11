@@ -75,7 +75,7 @@ void advertise_server(char * host_address, char *advert) {
         exit(1);
     }
 
-    printf("Created tun device %s\n", tunName.name);
+    printf("Successfully created tun device %s\n", tunName.name);
     
     res = add_address_to_interface(tunName.name, host_address);
     if (res != 0) {
