@@ -4,6 +4,7 @@ CFLAGS := -O3 -g -Wall -Werror
 LDFLAGS := -O3
 INCLUDE := 
 
+SOURCE_DIR := src
 BUILD_DIR := build
 INSTALL_DIR := .
 EXECUTABLE := registerLanServer
@@ -22,7 +23,7 @@ $(INSTALL_DIR)/%: $(BUILD_DIR)/%
 $(BUILD_DIR)/$(EXECUTABLE): $(OBJ) | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-$(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c | $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) $(INCLUDE) -o $@  $^
 
 $(BUILD_DIR):
