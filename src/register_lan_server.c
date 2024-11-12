@@ -44,14 +44,14 @@ int main(int argc, char *argv[]) {
 #define PAYLOAD_FORMAT "[MOTD]%s[/MOTD][AD]%s[/AD]"
 #define PAYLOAD_FORMAT_LEN 22
 
-char* allocate_payload(char* motd, char* port) {
+char* allocate_payload(char *motd, char *port) {
     int len = PAYLOAD_FORMAT_LEN + strlen(motd) + strlen(port) + 1;
     char* payload = malloc(len);
     sprintf(payload, "[MOTD]%s[/MOTD][AD]%s[/AD]", motd, port);
     return payload;
 }
 
-void advertise_server(char * host_address, char *advert) {
+void advertise_server(char *host_address, char *advert) {
     int res;
 
     struct sockaddr_in source_addr;
@@ -89,6 +89,12 @@ void advertise_server(char * host_address, char *advert) {
         exit(1);
     }
 
+    printf("press a key\n");
+    char line[1024];
+    scanf("%1023[^\n]", line);
+
+    printf("Target address: %s\n", MAGIC_ADDRESS);
+
     printf("Starting multicast on UDP\n");
     printf("\n");
 
@@ -99,12 +105,20 @@ void advertise_server(char * host_address, char *advert) {
     }
 
     res = bind(sockfd, (struct sockaddr *) &source_addr, sizeof(source_addr));
+    if (res != 0) {
+        perror("Failed to bind socket");
+        exit(1);
+    }
 
     struct sockaddr_in target_addr;
     memset(&target_addr, 0, sizeof(target_addr));
     target_addr.sin_family = AF_INET;
     target_addr.sin_port = htons(PORT);
-    target_addr.sin_addr.s_addr = inet_addr(MAGIC_ADDRESS);
+    res = inet_pton(AF_INET, MAGIC_ADDRESS, &(target_addr.sin_addr));
+    if (res != 1) {
+        perror("target address is not a valid network address");
+        exit(1);
+    }
     
     int i = 0;
     while (1) {
